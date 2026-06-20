@@ -5,7 +5,7 @@ namespace BokutachiToOpenLR2ScoreImporter
     {
         public required string MD5 { get; set; }
         public required BokutachiClearType ClearType { get; set; }
-        public required BokutachiRankType GradeType { get; set; }
+        public required BokutachiRankType RankType { get; set; }
         public required int NoteCount { get; set; }
         public required int Rate { get; set; }
         public required int PGreat { get; set; }

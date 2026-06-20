@@ -85,7 +85,7 @@ namespace BokutachiToOpenLR2ScoreImporter
                         {
                             MD5 = md5,
                             ClearType = clearType,
-                            GradeType = gradeTypeIndex,
+                            RankType = gradeTypeIndex,
 
                             NoteCount = noteCount,
                             Rate = rate,

@@ -45,8 +45,8 @@ namespace BokutachiToOpenLR2ScoreImporter
             }
 
             Console.WriteLine($"player.db path : {playerDBPath}");
-            var aggregator = new PlayerDBAggregator();
-            aggregator.AggregatePlayerDB(playerDBPath, scores);
+            var aggregator = new PlayerDBBuilder();
+            aggregator.BuildIRScoreDB(playerDBPath, scores);
 
             OnExit();
         }
