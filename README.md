@@ -8,6 +8,8 @@ Imports your personal best scores from Bokutachi IR into your local OpenLR2 play
 - Inserts new chart records if they don't exist in your local database.
 - Preserves existing records if they are already better than your Bokutachi IR PBs.
 
+[How is it imported?](https://app.notion.com/p/IR-Record-to-LR2-player-db-38452d65f39a801fbf78e059a816f9df?source=copy_link)
+
 ## How to use
 
 1. Make a backup of your `player.db` file.
