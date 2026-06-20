@@ -6,29 +6,15 @@ namespace BokutachiToOpenLR2ScoreImporter
     {
         private const string IR_DERIVED_SCOREHASH = "IR_DERIVED_RECORD";
 
-        public void BuildIRScoreDB(string playerDBPath, IEnumerable<BokutachiScoreRecord> records)
+        public void BuildIRScoreDB(string dbPath, IEnumerable<BokutachiScoreRecord> records)
         {
             Dictionary<string, OpenLR2ScoreRecord> existingRecords;
-            using (var playerdbConn = new SqliteConnection($"Data Source={playerDBPath}"))
-            {
-                playerdbConn.Open();
-                existingRecords = LoadExistingRecords(playerdbConn);
-            }
-
-            Console.WriteLine($"Loaded {existingRecords.Count} existing records from the database.");
-
-            var parent = Directory.GetParent(playerDBPath).FullName;
-            var dbDir = Path.Combine(parent, "IRScore");
-            if (!Directory.Exists(dbDir))
-            {
-                Directory.CreateDirectory(dbDir);
-            }
-
-            var fileName = Path.GetFileName(playerDBPath);
-            var dbPath = Path.Combine(dbDir, fileName);
             using var conn = new SqliteConnection($"Data Source={dbPath}");
             conn.Open();
-            using var tx = conn.BeginTransaction();
+
+            var tx = conn.BeginTransaction();
+            existingRecords = LoadExistingRecords(conn, tx);
+            Console.WriteLine($"Loaded {existingRecords.Count} existing records from the database.");
 
             try
             {
@@ -77,8 +63,8 @@ namespace BokutachiToOpenLR2ScoreImporter
         {
             var query = @"
                 INSERT OR REPLACE INTO imported_score
-                (hash, clear, perfect, great, good, bad, poor, total_notes, max_combo, minbp, rank, rate, complete)
-                VALUES (@hash, @clear, @perfect, @great, @good, @bad, @poor, @total_notes, @max_combo, @minbp, @rank, @rate, @complete);";
+                (hash, clear, perfect, great, good, bad, poor, totalnotes, maxcombo, scorehash, minbp, rank, rate, complete)
+                VALUES (@hash, @clear, @perfect, @great, @good, @bad, @poor, @totalnotes, @maxcombo, @scorehash, @minbp, @rank, @rate, @complete);";
 
             try
             {
@@ -95,8 +81,9 @@ namespace BokutachiToOpenLR2ScoreImporter
                 cmd.Parameters.AddWithValue("@good", record.Good);
                 cmd.Parameters.AddWithValue("@bad", record.Bad);
                 cmd.Parameters.AddWithValue("@poor", record.Poor);
-                cmd.Parameters.AddWithValue("@total_notes", record.NoteCount);
-                cmd.Parameters.AddWithValue("@max_combo", record.MaxCombo);
+                cmd.Parameters.AddWithValue("@totalnotes", record.NoteCount);
+                cmd.Parameters.AddWithValue("@scorehash", IR_DERIVED_SCOREHASH);
+                cmd.Parameters.AddWithValue("@maxcombo", record.MaxCombo);
                 cmd.Parameters.AddWithValue("@minbp", record.MinBP);
                 cmd.Parameters.AddWithValue("@rank", (int)rank);
                 cmd.Parameters.AddWithValue("@rate", record.Rate);
@@ -122,11 +109,22 @@ namespace BokutachiToOpenLR2ScoreImporter
                 good INTEGER,
                 bad INTEGER,
                 poor INTEGER,
-                total_notes INTEGER,
-                max_combo INTEGER,
+                totalnotes INTEGER,
+                maxcombo INTEGER,
                 minbp INTEGER,
+                playcount INTEGER,
+                clearcount INTEGER,
+                failcount INTEGER,
                 rank INTEGER,
                 rate INTEGER,
+                clear_db INTEGER,
+                op_history INTEGER,
+                scorehash TEXT,
+                ghost TEXT,
+                clear_sd INTEGER,
+                clear_ex INTEGER,
+                op_best INTEGER,
+                rseed INTEGER,
                 complete INTEGER
             );";
 
@@ -169,14 +167,14 @@ namespace BokutachiToOpenLR2ScoreImporter
             };
         }
 
-        private Dictionary<string, OpenLR2ScoreRecord> LoadExistingRecords(SqliteConnection conn)
+        private Dictionary<string, OpenLR2ScoreRecord> LoadExistingRecords(SqliteConnection conn, SqliteTransaction tx)
         {
             var cache = new Dictionary<string, OpenLR2ScoreRecord>();
 
             string query = "SELECT * FROM score";
 
             using var cmd = new SqliteCommand(query, conn);
-            cmd.Transaction = conn.BeginTransaction();
+            cmd.Transaction = tx;
 
             using (var reader = cmd.ExecuteReader())    
             {
