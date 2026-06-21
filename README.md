@@ -2,6 +2,11 @@
 
 Imports your personal best scores from Bokutachi IR into your local OpenLR2 player.db.
 
+## Releases (Downloads)
+Download the latest release here, then unzip the file to get started.
+
+https://github.com/Unengine/BokutachiToOpenLR2ScoreImporter/releases
+
 ## Features
 
 - Inserts new chart records with your Bokutachi IR PB to the new table `imported_score`.
