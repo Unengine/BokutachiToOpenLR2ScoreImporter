@@ -12,7 +12,8 @@ Imports your personal best scores from Bokutachi IR into your local OpenLR2 play
 1. Make a backup of your `player.db` file.
     - Typically located at : `LR2Path/LR2Files/Database/Score/<playerName>.db`
 2. Download your all.json file (Personal Best scores from Bokutachi IR)
-    - Go to `https://boku.tachi.ac/api/v1/users/<your-userid>/games/bms-7k/pbs/all`.
+    - Go to `https://boku.tachi.ac/api/v1/users/<your-userid>/games/bms-7k/pbs/all`. (SP pbs)
+    - `https://boku.tachi.ac/api/v1/users/<your-userid>/games/bms-14k/pbs/all` (DP pbs)
     - Download the raw JSON file (usually right-click in your browser and select "Save as...").
 3. Launch BokutachiToOpenLR2ScoreImporter.exe
 4. Select the path to your all.json file.
