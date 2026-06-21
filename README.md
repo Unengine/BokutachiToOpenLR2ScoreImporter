@@ -20,6 +20,7 @@ Imports your personal best scores from Bokutachi IR into your local OpenLR2 play
 5. Select the path to your player.db file.
 6. The import process will start automatically.
 7. Press any key to close the application once finished.
+8. You should launch it twice if you need to import both SP and DP scores. (Optional)
 
 ## Disclaimer
 
