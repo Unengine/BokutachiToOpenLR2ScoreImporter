@@ -3,6 +3,9 @@
 Imports your personal best scores from Bokutachi IR into your local OpenLR2 player.db.
 
 ## Releases (Downloads)
+
+### If .NET 9.0.17 runtime is not installed in your computer, install it : .NET 9.0.17 Download
+
 Download the latest release here, then unzip the file to get started.
 
 https://github.com/Unengine/BokutachiToOpenLR2ScoreImporter/releases
