@@ -14,6 +14,8 @@ https://github.com/Unengine/BokutachiToOpenLR2ScoreImporter/releases
 
 ## How to use
 
+### If .NET 9.0.17 runtime is not installed in your computer, install it : [.NET 9.0.17 Download](https://dotnet.microsoft.com/download/dotnet/9.0)
+
 1. Make a backup of your `player.db` file.
     - Typically located at : `LR2Path/LR2Files/Database/Score/<playerName>.db`
 2. Download your all.json file (Personal Best scores from Bokutachi IR)
