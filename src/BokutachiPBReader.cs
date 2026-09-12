@@ -42,6 +42,7 @@ namespace BokutachiToOpenLR2ScoreImporter
 
         private List<BokutachiScoreRecord>? ExtractPbsScores(JObject root)
         {
+            var currentIndex = 0;
             try
             {
                 var scores = new List<BokutachiScoreRecord>();
@@ -77,8 +78,12 @@ namespace BokutachiToOpenLR2ScoreImporter
                             ? bpToken.Value<int>()
                             : (bd + pr);
 
-                        var maxCombo = optional?["maxCombo"]?.Value<int>() ??
-                            (clearType == BokutachiClearType.FULLCOMBO ? noteCount : 0);
+                        // maxCombo is nullable
+                        var maxComboToken = optional?["maxCombo"];
+                        var maxCombo = maxComboToken != null && maxComboToken.Type == JTokenType.Integer
+							? maxComboToken.Value<int>()
+                            : (clearType == BokutachiClearType.FULLCOMBO ? noteCount : 0);
+
                         var rate = (int)(scoreData?["percent"]?.Value<double>() ?? ((pgr * 2 + gr) / noteCount * 2) * 100);
 
                         var record = new BokutachiScoreRecord
@@ -103,12 +108,14 @@ namespace BokutachiToOpenLR2ScoreImporter
                     {
                         Console.WriteLine($"Error parsing pb, chartId : {chartId}");
                     }
+
+                    ++currentIndex;
                 }
                 return scores;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error parsing pbs: {ex.Message}");
+                Console.WriteLine($"Error parsing pbs: {ex.Message}, currentIndex: {currentIndex}");
                 return null;
             }
         }
